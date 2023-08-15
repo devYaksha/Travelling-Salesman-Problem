@@ -2,6 +2,7 @@
 
 ## Genetic Algorithms
 **Case Study: Flight Selection**
+> Flight Optimization using Genetic Algorithm to find the best flight combinations from a given city to Rome and back. It aims to minimize cost and travel time while maximizing convenience and efficiency.
 
 Genetic Algorithms (GAs) are optimization algorithms inspired by the process of natural selection. They use techniques like selection, crossover, and mutation to evolve a population of potential solutions towards an optimal or near-optimal solution. In the case of Flight Selection, GAs can be used to find the best combination of flights based on various factors like cost, duration, and layovers.
 
