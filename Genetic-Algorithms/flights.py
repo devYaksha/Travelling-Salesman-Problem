@@ -43,4 +43,14 @@ def printCalendar(calendar):
     print('Preço total: ', totalPrice)
 
 
-printCalendar([1,4, 3,2, 7,3, 6,3, 2,4, 5,3])
+#printCalendar([1,4, 3,2, 7,3, 6,3, 2,4, 5,3])
+
+
+
+def get_minutes(hora):
+    t = time.strptime(hora, '%H:%M')
+    minutes = t[3]*60 + t[4]
+    return minutes
+
+
+print(get_minutes('10:32'))
