@@ -4,8 +4,12 @@
 **Case Study: Flight Selection**
 > Flight Optimization using Genetic Algorithm to find the best flight combinations from a given city to Rome and back. It aims to minimize cost and travel time while maximizing convenience and efficiency.
 
+**Case Study: Traveling Salesman problem**
+> Heuristic Optimization using Genetic Algorithm to find the best distance combinations from a given (x,y) points.
+
 Genetic Algorithms (GAs) are optimization algorithms inspired by the process of natural selection. They use techniques like selection, crossover, and mutation to evolve a population of potential solutions towards an optimal or near-optimal solution. In the case of Flight Selection, GAs can be used to find the best combination of flights based on various factors like cost, duration, and layovers.
 
+<!---
 ## Differential Evolution Algorithms
 **Case Study: Menu Creation (Carbohydrates, Proteins, and Fats)**
 
@@ -30,3 +34,4 @@ Particle Swarm Optimization (PSO) is a population-based optimization technique i
 **Case Study: Shortest Path Selection**
 
 Ant Colony Optimization (ACO) is inspired by the foraging behavior of ants. It's used for solving optimization problems, particularly those related to graph traversal and path finding. In the context of Shortest Path Selection, ACO can be utilized to find the shortest path between two points in a network, such as finding the most efficient route between two locations on a map.
+-->
