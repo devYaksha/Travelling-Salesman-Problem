@@ -8,13 +8,27 @@ import random
 import math 
 import matplotlib.pyplot as plt
 
-
 dictionary_Cities = {
-    1: (0,0), #a
-    2: (2,4), #b
-    3: (5,2), #c
-    4: (7,7), #d
-    5: (1,6)  #e
+   1: (0,0), #a
+   2: (2,4), #b
+   3: (5,2), #c
+   4: (7,7), #d
+   5: (1,6),  #e
+   6: (3, 1), #f
+   7: (6, 3), #g
+   8: (4, 5), #h
+   9: (8, 6), #i
+   10: (2, 3), #j
+   11: (9, 9), #k
+   12: (3, 7), #l
+   13: (6, 1), #m
+   14: (0, 5), #n
+   15: (5, 5), #o
+   16: (8, 2), #p
+   17: (1, 2), #q
+   18: (4, 6), #r
+   19: (7, 4), #s
+   20: (2, 1) #t
 }
 
 def criar_cromossomo():
@@ -35,11 +49,11 @@ def criar_populacao(tamanho_populacao):
 
 def fitness_cromossomo(cromossomo): #Calcula a distancia entre dois pontos utilizando a função: #dAB = sqrt((xB – xA)² + (yB – yA)²) 
    
+   #print(cromossomo)
    cordenadas = []
    for i in range(len(cromossomo)):
       cordenada_gene = dictionary_Cities[cromossomo[i]]
       cordenadas.append(cordenada_gene) #armazena em um vetor de coordenadas
-
 
    fitness = 0
 
@@ -67,19 +81,19 @@ def pmx_crossover(parent1, parent2):
     offspring1[point1:point2 + 1] = parent1[point1:point2 + 1]
     offspring2[point1:point2 + 1] = parent2[point1:point2 + 1]
 
-    # Fill in the remaining genes in offspring1 and offspring2 using PMX
+    # PreenchE os genes restantes no filho1 e no filho2 usando PMX
     for i in range(len(parent1)):
         if point1 <= i <= point2:
             continue 
         else:
-            # Find a mapping from parent2 for the current gene in offspring1
+            # Encontre um mapeamento do pai2 para o gene atual filho1
             mapping = parent2[i]
             while mapping in offspring1[point1:point2 + 1]:
                 index = parent1.index(mapping)
                 mapping = parent2[index]
             offspring1[i] = mapping
 
-            # Repeat the process for offspring2
+            # Repete o processo pro filho 2
             mapping = parent1[i]
             while mapping in offspring2[point1:point2 + 1]:
                 index = parent2.index(mapping)
@@ -88,82 +102,141 @@ def pmx_crossover(parent1, parent2):
 
     return offspring1, offspring2
 
-
 def crossover(populacao):
    novos_cromossomos = []
-   for i in range(len(populacao)-1):
-        crossover_chance = random.randint(1,10)
+   for i in range(0, len(populacao)-1, 2):
+        crossover_chance = random.randint(1,10) #repete o processo de pmx para todos os filhos-1
         if crossover_chance > 2:
             filho1, filho2 = pmx_crossover(populacao[i], populacao[i+1])
             novos_cromossomos.append(filho1)
             novos_cromossomos.append(filho2)
+        else:
+         filho1, filho2 = populacao[i], populacao[i+1]
+         novos_cromossomos.append(filho1)
+         novos_cromossomos.append(filho2)
    
    return novos_cromossomos
         
+def melhor_individuo(vetor_fitness, populacao):
+   melhor_fitness = vetor_fitness[0]
+   pior_fitness = melhor_fitness
+   pior_cromossomo = populacao[0]
+   melhor_cromossomo = populacao[0]
 
-def definir_sobreviventes(populacao, populacao_filha): #por torneio https://www.youtube.com/watch?v=NFVng_313b4&ab_channel=Ren%C3%A9GarganoFerrari
+   for i in range(len(vetor_fitness)):
+      if vetor_fitness[i] < melhor_fitness:
+          melhor_fitness = vetor_fitness[i]
+          melhor_cromossomo = populacao[i]
 
-   populacao_final = []
-   if len(populacao_filha) == 0:
-      populacao_final = populacao
-      return populacao_final
+      if vetor_fitness[i] > pior_fitness:
+          pior_fitness = vetor_fitness[i]
+          pior_cromossomo = populacao[i]
 
-   
-   k = 0.1
-   for i in range(len(populacao)):
+   return melhor_fitness, melhor_cromossomo, pior_fitness, pior_cromossomo     
 
-      primeiroR = random.choice(populacao)
-      segundoR = random.choice(populacao_filha)
-      fitness_primeiroR = fitness_cromossomo(primeiroR)
-      fitness_segundoR = fitness_cromossomo(segundoR)
+def torneio(populacao, tamanho_da_luta):
+    populacao_final = []
+    lutadores = []
+    
+    k = 0.6
+    for i in range(len(populacao)):
+      for j in range(tamanho_da_luta):
+          lutadores.append(random.choice(populacao))
+      r = random.random()  # valor entre 0 e 1
+      fitness = fitness_populacao(lutadores)
+      
+      melhor_fitness, melhor_cromossomo, pior_fitness, pior_cromossomo = melhor_individuo(fitness,lutadores)
 
-      if fitness_primeiroR <= fitness_segundoR:
-         melhor_cromossomo = primeiroR
-         pior_cromossomo = segundoR
+      if r < k:
+          populacao_final.append(melhor_cromossomo)
       else:
-         melhor_cromossomo = segundoR
-         pior_cromossomo = primeiroR
-         
+          populacao_final.append(pior_cromossomo)
 
-      r = random.randint(0,1)
-      if r > k:
-         populacao_final.append(melhor_cromossomo)
-      else:
-         populacao_final.append(pior_cromossomo)
+    return populacao_final
+ 
+def mutacao_cromossomo(cromossomo,taxa_mutacao):
+    novo_cromossomo = cromossomo[:]  # Crie uma cópia do cromossomo original
 
-   return populacao_final
+    if random.random() < taxa_mutacao:  # Probabilidade de 5% de mutação
+        indices = random.sample(range(len(cromossomo)), 2)
+        index1, index2 = indices[0], indices[1]
+        novo_cromossomo[index1], novo_cromossomo[index2] = novo_cromossomo[index2], novo_cromossomo[index1]
 
-def fitness(populacao):
-   melhorIndividuo = fitness_populacao(populacao)
-   fitnessX = melhorIndividuo[0]
-   for i in range(len(melhorIndividuo)):
-      if melhorIndividuo[i] < fitnessX:
-         fitnessX = melhorIndividuo[i]
-   
-   return fitnessX
+    return novo_cromossomo
 
+def mutacao(populacao,taxa_mutacao):
+    novo_mutante = [mutacao_cromossomo(cromossomo,taxa_mutacao) for cromossomo in populacao]
+    return novo_mutante
 
-def gerar_grafico(vetorFitness, num_geracoes):
-   plt.plot(range(num_geracoes), vetorFitness)
-   plt.title("Gráfico")
+def gerar_grafico(vetorFitness, num_geracoes, melhor_global):
+   plt.plot(range(num_geracoes + 1), vetorFitness)
+   plt.title(f"Fitness: {fitness_cromossomo(melhor_global):.2f}")
    plt.xlabel("Iterações")
    plt.ylabel("Fitness")
    plt.show()
-  
-def algoritmo_genetico(tamanho_populacao, numero_geracoes):
+   
+def grafico_pontos(melhor_vetor_global):
+    # Descompacte a lista de pontos em listas separadas para x e y
+    cordenadas = []
+    print(melhor_vetor_global)
+    for i in range(len(melhor_vetor_global)):
+      cordenada_gene = dictionary_Cities[melhor_vetor_global[i]]
+      cordenadas.append(cordenada_gene)
+    x_points, y_points = zip(*cordenadas)
+    
+    plt.scatter(x_points, y_points, label='Pontos', color='b', marker='o')
+    
+    # Traçar linhas entre os pontos consecutivos no vetor
+    for i in range(len(cordenadas) - 1):
+        x1, y1 = cordenadas[i]
+        x2, y2 = cordenadas[i + 1]
+        plt.plot([x1, x2], [y1, y2], color='r')
+    
+    # Adicione rótulos aos eixos x e y
+    plt.xlabel('Eixo X')
+    plt.ylabel('Eixo Y')
+    
+    # Adicione um título ao gráfico
+    plt.title('Traçado de Linhas entre Pontos')
+    
+    # Exiba a legenda
+    plt.legend()
+    
+    # Mostrar o gráfico
+    plt.show()
+def algoritmo_genetico(tamanho_populacao, numero_geracoes, tamanho_torneio, taxa_mutacao):
+
    populacao = criar_populacao(tamanho_populacao)
-   fitness_melhor = []
+   fitness = fitness_populacao(populacao)
+   melhor_fitness_global, melhor_individuo_global, pior_fitness, pior_cromossomo = melhor_individuo(fitness, populacao)
+
+   melhor_vetor_global = []
+   melhor_vetor_global.append(melhor_fitness_global)
 
    for i in range(numero_geracoes):
-        populacao_filha = crossover(populacao)
-        populacao = definir_sobreviventes(populacao, populacao_filha)
-        melhor_fitness = fitness(populacao)
-        fitness_melhor.append(melhor_fitness)
+        populacao = torneio(populacao, tamanho_torneio)
+        populacao = crossover(populacao)
+        populacao = mutacao(populacao,taxa_mutacao)
 
-   
-   gerar_grafico(fitness_melhor, numero_geracoes)
+        populacao[random.randint(0, len(populacao)-1)] = melhor_individuo_global
+        fitness = fitness_populacao(populacao)
+        melhor_fitness_global, melhor_individuo_global, pior_fitness, pior_cromossomo  = melhor_individuo(fitness, populacao)
+        melhor_vetor_global.append(melhor_fitness_global)
+
+   gerar_grafico(melhor_vetor_global, numero_geracoes, melhor_individuo_global)
+   grafico_pontos(melhor_individuo_global)
 
 # Exemplo de uso:
-tamanho_populacao = 10
-numero_geracoes = 100
-algoritmo_genetico(tamanho_populacao, numero_geracoes)
+tamanho_populacao = 250
+numero_geracoes = 50
+taxa_mutacao = 0.8
+tamanho_torneio = 5
+
+algoritmo_genetico(tamanho_populacao, numero_geracoes,tamanho_torneio, taxa_mutacao)
+
+#39.7
+#39.14
+#40.17
+#40.46
+
+#37.26

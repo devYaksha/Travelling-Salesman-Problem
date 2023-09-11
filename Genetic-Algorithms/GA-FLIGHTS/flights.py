@@ -13,7 +13,7 @@ pessoas = [('Lisbon', 'LIS'),
 dominio = [(0, 9)] * (len(pessoas) * 2)
 destino = 'FCO' # Roma
 voos = {}
-for linha in open('flights.txt'):
+for linha in open('./GA-FLIGHTS/flights.txt'):
   origem, destino, partida, chegada, preco = linha.split(',')
   voos.setdefault((origem, destino), [])
   voos[(origem, destino)].append((partida, chegada, int(preco)))
@@ -117,7 +117,7 @@ def algoritmo_genetico(dominio, funcao_avaliacao, tamanho_populacao = 100, passo
 
 
 solucao = algoritmo_genetico(dominio, funcao_avaliacao, numero_geracoes = 500, tamanho_populacao=100, 
-                             elitismo = 0.2, probabilidade_mutacao = 0.05)
+                             elitismo = 0.2, probabilidade_mutacao = 1)
 
 
 
