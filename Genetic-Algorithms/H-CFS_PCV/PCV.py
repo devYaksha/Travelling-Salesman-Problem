@@ -1,35 +1,6 @@
-#Cidade A: (0, 0) -> 1
-#Cidade B: (2, 4) -> 2
-#Cidade C: (5, 2) -> 3
-#Cidade D: (7, 7) -> 4
-#Cidade E: (1, 6) -> 5
-
 import random
 import math 
-import matplotlib.pyplot as plt
-
-dictionary_Cities = {
-   1: (0,0), #a
-   2: (2,4), #b
-   3: (5,2), #c
-   4: (7,7), #d
-   5: (1,6),  #e
-   6: (3, 1), #f
-   7: (6, 3), #g
-   8: (4, 5), #h
-   9: (8, 6), #i
-   10: (2, 3), #j
-   11: (9, 9), #k
-   12: (3, 7), #l
-   13: (6, 1), #m
-   14: (0, 5), #n
-   15: (5, 5), #o
-   16: (8, 2), #p
-   17: (1, 2), #q
-   18: (4, 6), #r
-   19: (7, 4), #s
-   20: (2, 1) #t
-}
+from plotGraphics import *
 
 def criar_cromossomo():
     cromossomo = []
@@ -168,42 +139,9 @@ def mutacao(populacao,taxa_mutacao):
     novo_mutante = [mutacao_cromossomo(cromossomo,taxa_mutacao) for cromossomo in populacao]
     return novo_mutante
 
-def gerar_grafico(vetorFitness, num_geracoes, melhor_global):
-   plt.plot(range(num_geracoes + 1), vetorFitness)
-   plt.title(f"Fitness: {fitness_cromossomo(melhor_global):.2f}")
-   plt.xlabel("Iterações")
-   plt.ylabel("Fitness")
-   plt.show()
+
    
-def grafico_pontos(melhor_vetor_global):
-    # Descompacte a lista de pontos em listas separadas para x e y
-    cordenadas = []
-    print(melhor_vetor_global)
-    for i in range(len(melhor_vetor_global)):
-      cordenada_gene = dictionary_Cities[melhor_vetor_global[i]]
-      cordenadas.append(cordenada_gene)
-    x_points, y_points = zip(*cordenadas)
-    
-    plt.scatter(x_points, y_points, label='Pontos', color='b', marker='o')
-    
-    # Traçar linhas entre os pontos consecutivos no vetor
-    for i in range(len(cordenadas) - 1):
-        x1, y1 = cordenadas[i]
-        x2, y2 = cordenadas[i + 1]
-        plt.plot([x1, x2], [y1, y2], color='r')
-    
-    # Adicione rótulos aos eixos x e y
-    plt.xlabel('Eixo X')
-    plt.ylabel('Eixo Y')
-    
-    # Adicione um título ao gráfico
-    plt.title('Traçado de Linhas entre Pontos')
-    
-    # Exiba a legenda
-    plt.legend()
-    
-    # Mostrar o gráfico
-    plt.show()
+
 def algoritmo_genetico(tamanho_populacao, numero_geracoes, tamanho_torneio, taxa_mutacao):
 
    populacao = criar_populacao(tamanho_populacao)
@@ -222,21 +160,22 @@ def algoritmo_genetico(tamanho_populacao, numero_geracoes, tamanho_torneio, taxa
         fitness = fitness_populacao(populacao)
         melhor_fitness_global, melhor_individuo_global, pior_fitness, pior_cromossomo  = melhor_individuo(fitness, populacao)
         melhor_vetor_global.append(melhor_fitness_global)
+        print(f"Geração: {i+1}")
 
-   gerar_grafico(melhor_vetor_global, numero_geracoes, melhor_individuo_global)
-   grafico_pontos(melhor_individuo_global)
+   gerar_grafico(melhor_vetor_global, numero_geracoes, fitness_cromossomo(melhor_individuo_global))
+   grafico_pontos(melhor_individuo_global, dictionary_Cities)
 
 # Exemplo de uso:
-tamanho_populacao = 250
-numero_geracoes = 50
+tamanho_populacao = 100
+numero_geracoes = 30
 taxa_mutacao = 0.8
-tamanho_torneio = 5
+tamanho_torneio = 6
 
 algoritmo_genetico(tamanho_populacao, numero_geracoes,tamanho_torneio, taxa_mutacao)
 
+#Best solutions founded:
 #39.7
 #39.14
 #40.17
 #40.46
-
 #37.26
