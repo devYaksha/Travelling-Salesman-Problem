@@ -1,0 +1,13 @@
+Coeficiente de correlação de Pearson:
+
+r = (n * sum_xy - sum_x * sum_y) / 
+        (math.sqrt((n * sum_x2 - sum_x ** 2) * (n * sum_y2 - sum_y ** 2)))
+
+Onde:
+
+n é o número de elementos nos dois vetores.
+sum_xy é a soma dos produtos dos elementos de x e y correspondentes.
+sum_x é a soma dos elementos de x.
+sum_y é a soma dos elementos de y.
+sum_x2 é a soma dos quadrados dos elementos de x.
+sum_y2 é a soma dos quadrados dos elementos de y.
