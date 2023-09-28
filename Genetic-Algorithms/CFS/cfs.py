@@ -1,5 +1,4 @@
 import math
-import numpy
 from utils import *
 
 def sum_vc(vector):
@@ -98,9 +97,110 @@ def pearsonCoeff_cat_cat(vectorA, vectorB):
     return sum_cat_cat
 
 
+def possible_class_hierarchy(a_class, dist_class):
+    """
+    A função itera sobre as classes distintas e constrói um vetor de classes possíveis
+    na hierarquia. O resultado é ordenado.
+
+    Args:
+    - a_class: Não é usado na função.
+    - dist_class: Um vetor de strings que contém classes distintas.
+
+    Return:
+    - List
+"""
+    possible_class = []
+    concate = []
+    for i in range(len(dist_class)):
+        aux_str = explode(dist_class[i], '.')
+        level = len(aux_str)
+
+        for j in range(level):
+            if j == 0:
+                concate.append(aux_str[j])
+            else:
+                concate.append("." + aux_str[j])
+            possible_c = concate[:]
+            if in_array_string(possible_c, possible_class) == -1:
+                possible_class.append(possible_c) #se for classe nova, adicona no vector possible_class
+
+        
+    possible_class.sort()
+    return possible_class
+
+
+def class_to_vector(a_class, possible_class):
+    """
+    Esta função recebe uma lista de instâncias de classe e uma lista de hierarquias de classe
+    possíveis. Ela gera um vetor binário para cada instância de classe, onde cada elemento
+    no vetor corresponde à presença (1) ou ausência (0) de uma hierarquia de classe específica em 'possible_class'.
+
+    Args:
+    - a_class: Uma lista de instâncias de classe.
+    - possible_class: Uma lista de hierarquias de classe possíveis, gerada por `possible_class_hierarchy()`
+
+    Return:
+    - lista de listas, (Matriz): Uma lista de vetores binários representando a ocorrência de classes."""
+    occurrence = []
+    for i in range(len(a_class)):
+        instance_vec = [0]*len(possible_class)
+        aux_str = explode(a_class[i], '.')
+        for j in range(len(aux_str)):
+            current_c = '.'.join(aux_str[:j + 1])
+            position = in_array_string(current_c, possible_class)
+            if position != -1:
+                instance_vec[position] = 1
+        occurrence.append(instance_vec)
+    return occurrence
+
+
+def correlation_fl_multilabel(class_vector, data, f_type):
+    """
+    Cria o vetor de correlacao entre todas as features da base e o atributo classe, considerando cada classe da heirarquia como classe binaria
+    """
+    correlation = []
+    tam_class_vector = len(class_vector[0])
+    tam_features = len(data[0])
+
+    for k in range(tam_features):
+        feature = get_column(data,k)
+        sum_correlation = 0
+
+        if f_type[k] == 1:
+            for i in range(tam_class_vector):
+                label = get_column(class_vector, i)
+                pearson = pearsonCoeff(feature, label)
+                sum_correlation += abs(pearson)
+
+        else:
+            for i in range(tam_class_vector):
+                label = get_column(class_vector, i)
+                pearson = pearsonCoeff_cat_num(feature, label)
+                sum_correlation += abs(pearson)
+
+        pearson_normal = sum_correlation/tam_class_vector
+        correlation.append(pearson_normal)
+        
+    return correlation
+
+def class_level(possible_class):
+    """percorre o vetor de classes possiveis e retorna um vetor de mesmo tamanho com o nivel da classe"""
+    level_vector = []
+    for i in range(len(possible_class)):
+        aux_str = explode(possible_class[i], '.')
+        level_vector.append(len(aux_str))
+    return level_vector
+
+def classes_per_level(max_level, possible_class_level):
+    """percorre o vetor de classes possiveis e retorna um vetor com o total de classes por nivel da hierarquia"""
+    total_classes_per_level = [0 for i in range(max_level)]
+    for i in range(len(possible_class_level)):
+        total_classes_per_level[possible_class_level[i]-1] += 1
+    
+    return total_classes_per_level
 
 
 
 
-
-
+#ector <double>  correlation_fl_hierarchical(const vector< vector<double> > &class_vec, const vector< vector<double> > &data,
+                                           

@@ -49,5 +49,10 @@ def in_array_string(v_class, vectorA):
     
     return -1
 
+def get_column(matrix, k):
+    vector = []
+    for j in range(len(matrix)):
+        vector.append(matrix[j][k])
+    return vector
 
 
