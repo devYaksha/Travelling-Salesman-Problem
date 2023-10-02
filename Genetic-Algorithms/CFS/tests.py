@@ -67,3 +67,9 @@ print(pearsonCoeff_cat_cat(vetor_categoricoA, vetor_categoricoC)) #ok
 print(pearsonCoeff_cat_cat(vetor_categoricoC, vetor_categoricoD)) #ok
 
 """
+
+vectorA = ['ABC', 'DEF', 'GHI']
+
+vectorDistinct = possible_class_hierarchy(vectorA)
+
+print(class_to_vector(vectorA, vectorDistinct))
