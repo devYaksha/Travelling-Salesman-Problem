@@ -202,5 +202,96 @@ def classes_per_level(max_level, possible_class_level):
 
 
 
-#ector <double>  correlation_fl_hierarchical(const vector< vector<double> > &class_vec, const vector< vector<double> > &data,
-                                           
+def correlation_fl_hierarchical(class_vec, data, f_type, class_level, w_0, classes_per_level):
+    tam_class_vec = len(class_vec[0])
+    tam_features = len(data[0])
+    sum_weight = 0
+    correlation = []
+
+    for k in range(len(classes_per_level)):
+        sum_weight += (pow(w_0, k+1)*classes_per_level[k])
+
+    for k in range(tam_features):
+        feature = get_column(data,k)
+        sum_correlation = 0
+
+        if f_type[k] == 1:
+            for i in range(tam_class_vec):
+                label = get_column(class_vec, i)
+                pearson = pearsonCoeff(feature, label)
+                sum_correlation += abs(pearson)*(pow(w_0, class_level[i]))
+        else: 
+            for i in range(tam_class_vec):
+                label = get_column(class_vec, i)
+                pearson = pearsonCoeff_cat_num(feature, label)
+                sum_correlation += abs(pearson)*(pow(w_0, class_level[i]))
+
+        pearson_normal = sum_correlation/sum_weight
+        correlation.append(pearson_normal)
+
+    return correlation
+
+def correlation_f_to_f_vec(data, f_type):
+    correlation_matrix = []
+    
+    tam_features = len(data[0])
+    
+    for k in range(tam_features - 1):
+        correlation = [] #reseta a cada iteração
+        for j in range(k + 1, tam_features):
+            if f_type[k] == 1 and f_type[j] == 1:  # numerico e numerico
+                f1 = get_column(data, k)
+                f2 = get_column(data, j)
+                pearson = pearsonCoeff(f1, f2)
+                correlation.append(pearson)
+            elif f_type[k] == 1 and f_type[j] == 2:  # numerico e categorico
+                f1 = get_column(data, k)
+                f2 = get_column(data, j)
+                pearson = pearsonCoeff_cat_num(f2, f1)
+                correlation.append(pearson)
+            elif f_type[k] == 2 and f_type[j] == 1:  # categorico e numerico
+                f1 = get_column(data, k)
+                f2 = get_column(data, j)
+                pearson = pearsonCoeff_cat_num(f1, f2)
+                correlation.append(pearson)
+            else:  # categorico e categorico
+                f1 = get_column(data, k)
+                f2 = get_column(data, j)
+                pearson = pearsonCoeff_cat_cat(f1, f2)
+                correlation.append(pearson)
+        
+        correlation_matrix.append(correlation)
+    
+    return correlation_matrix
+
+
+
+def merit_cfs(s, correlation_ff_mat, correlation_fl_vec):
+    merit = []
+    merit_value = 0
+    merit_denominator = 0
+    sum_correlation_ff = 0
+    sum_correlation_fl = 0
+    att_vec = s
+    tam_features = len(att_vec)
+
+    att_vec.sort()  # Atributos ordenados de maneira crescente
+
+    for k in range(tam_features - 1):
+        for j in range(k + 1, tam_features):
+            sum_correlation_ff += correlation_ff_mat[att_vec[k]][att_vec[j] - att_vec[k] - 1]
+
+    for k in range(tam_features):
+        sum_correlation_fl += correlation_fl_vec[att_vec[k]]
+
+    merit_denominator = pow((tam_features + (tam_features *(tam_features - 1) * sum_correlation_ff)), 0.5)
+
+    if math.isnan(merit_denominator):
+        merit_denominator = 0.00000001
+
+    merit_value = (tam_features * sum_correlation_fl)/(merit_denominator)
+    merit.append(merit_value)
+
+    return merit
+
+
