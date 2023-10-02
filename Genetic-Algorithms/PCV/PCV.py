@@ -166,7 +166,7 @@ def algoritmo_genetico(tamanho_populacao, numero_geracoes, tamanho_torneio, taxa
    grafico_pontos(melhor_individuo_global, dictionary_Cities)
 
 # Exemplo de uso:
-tamanho_populacao = 30
+tamanho_populacao = 100
 numero_geracoes = 30
 taxa_mutacao = 0.1
 tamanho_torneio = 6

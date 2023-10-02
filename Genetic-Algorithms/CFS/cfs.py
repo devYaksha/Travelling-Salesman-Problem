@@ -270,8 +270,6 @@ def correlation_f_to_f_vec(data, f_type):
 
 def merit_cfs(s, correlation_ff_mat, correlation_fl_vec):
     merit = []
-    merit_value = 0
-    merit_denominator = 0
     sum_correlation_ff = 0
     sum_correlation_fl = 0
     att_vec = s
