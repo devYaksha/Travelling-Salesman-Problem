@@ -9,6 +9,20 @@ from cfs import *
 #print(explode("Teste em python", " ")) #ok
 #print(in_array_string("Teste", ['Hello', 'World', 'Teste'])) #ok
 
+"""
+vectorA = [1, 2, 3, 4, 5]   #esperado -1 
+vectorB = [-2, -4, -6, -8, -10]
 
-#Cfs:
+vectorC = [1, 2, 3, 4, 5]
+vectorD = [7, 3, 8, 2, 6]    #esperado ausencia de correlação linear
 
+vectorE = [1, 2, 3, 4, 5]
+vectorF = [2, 4, 6, 8, 10] #esperado 1  
+
+print(pearsonCoeff(vectorA, vectorB))
+print(pearsonCoeff(vectorC, vectorD))
+print(pearsonCoeff(vectorE, vectorF))
+
+#Função pearsonCoeff 100%
+
+"""

@@ -28,25 +28,27 @@ def operatorMinus(vector, numSubtraction):
     return vectorCopy
 
 def operatorMultiplication(vector, numMultiplication):
-    """Retorna um vetor com os índice multiplicados pelo 'numMultiplication'"""
+    """Retorna um vetor com os elementos multiplicados por 'numMultiplication'."""
     vectorCopy = vector[:]
-
-    for i in range(0, len(vector)):
+    for i in range(len(vector)):
         vectorCopy[i] = vector[i] * numMultiplication[i]
     return vectorCopy
 
-def pearsonCoeff(vectorA, vectorB): 
+def pearsonCoeff(vectorA, vectorB):
     """Calcula o coeficiente de correlação de Pearson entre dois vetores, varia de -1 (negativa) a 1 (positiva), com 0 indicando ausência de correlação linear."""
     
     mean_A, mean_B = mean(vectorA), mean(vectorB)
     dif_A, dif_B = operatorMinus(vectorA, mean_A), operatorMinus(vectorB, mean_B)
-    multiplication = operatorMultiplication(dif_A, dif_B)
+    product_AB = sum_vc(operatorMultiplication(dif_A, dif_B))
+    stdev_A, stdev_B = stdev(dif_A), stdev(dif_B)
+    
     try:
-        pearson = abs((sum_vc(multiplication))/(stdev(dif_A)*stdev(dif_B)))
+        pearson = product_AB / (stdev_A * stdev_B)
     except ZeroDivisionError:
-            return 0.00000001 #divisão por zero
-
+        return 0.00000001  # Divisão por zero
+    
     return pearson
+
 
 def binaryVector(k, vector): 
     """Percorre o "vector" e retorna um vetor binario para o k referenciado"""
