@@ -165,24 +165,10 @@ def algoritmo_genetico(tamanho_populacao, numero_geracoes, tamanho_torneio, taxa
    gerar_grafico(melhor_vetor_global, numero_geracoes, fitness_cromossomo(melhor_individuo_global))
    grafico_pontos(melhor_individuo_global, dictionary_Cities)
 
-# Exemplo de uso:
-tamanho_populacao = 100
-numero_geracoes = 30
-taxa_mutacao = 0.1
-tamanho_torneio = 6
+# Use examples:
+tamanho_populacao = 100 #population len
+numero_geracoes = 30 #gerations nun
+taxa_mutacao = 0.1 #mutations num
+tamanho_torneio = 6 #tournament len
 
 algoritmo_genetico(tamanho_populacao, numero_geracoes,tamanho_torneio, taxa_mutacao)
-
-#Num cities: 30
-""" 
-Best solutions
-
-60.49
-
-53.04
-tamanho_populacao = 500
-numero_geracoes = 40
-taxa_mutacao = 0.4
-tamanho_torneio = 50
-
-"""
