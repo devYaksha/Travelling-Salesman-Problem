@@ -1,8 +1,4 @@
-# Bio-Inspired Artificial Intelligence
-
-## Genetic Algorithms
-**Case Study: Flight Selection**
-> Flight Optimization using Genetic Algorithm to find the best flight combinations from a given city to Rome and back. It aims to minimize cost and travel time while maximizing convenience and efficiency.
+# BGenetic Algorithms
 
 **Case Study: Traveling Salesman problem**
 > Heuristic Optimization using Genetic Algorithm to find the best distance combinations from a given (x,y) points.
