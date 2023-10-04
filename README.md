@@ -18,3 +18,6 @@
 3. **Algorithm Execution**: The genetic algorithm runs for a predetermined number of generations. Throughout this process, the algorithm keeps track of the best individual found, which corresponds to the shortest route discovered.
 
 This approach to the Traveling Salesman Problem with a Genetic Algorithm is a computational technique that mimics the process of natural selection and evolution to discover the optimal or near-optimal route that visits all cities exactly once. It provides a robust and efficient way to solve complex instances of the TSP and is applicable to various real-world scenarios requiring route optimization.
+
+
+> Necessary matplotlib to make the final graphs
